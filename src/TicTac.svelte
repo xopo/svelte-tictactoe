@@ -1,19 +1,32 @@
 <script>
-    let lastValue;
     export let board;
-    export let myPlayer;
+    export let myTurn;
+    export let reset;
+    export let nextMove;
 
-    const asignValue = (index) => {
-        const newValue = !lastValue || lastValue === 'o' ? 'x' : 'o';
-        ([elements[index], lastValue] = [newValue, newValue]);
+    // const asignValue = (index) => {
+    //     const newValue = !lastValue || lastValue === 'o' ? 'x' : 'o';
+    //     ([elements[index], lastValue] = [newValue, newValue]);
+    // }
+    $: console.log({board, myTurn});
+    $: message = myTurn ? 'Your move' : 'Wait for other player';
+
+    const applyMove = i => {
+        if (myTurn) {
+            nextMove(i)
+        } else {
+            message = '! wait for the other player to move';
+        }
     }
-    $: console.log({board, myPlayer});
+
 </script>
 <div class="content">
     {#each board as element, i}
-        <div class="cell-{i + 1}" on:click={() => asignValue(i)}>{element}</div>
+        <div class="cell-{i + 1}" on:click={() => applyMove(i)}>{element}</div>
     {/each}
-    <button type='button' on:click={() => console.log('reset the game')}>Reset</button>
+    <button type='button' on:click={() => reset()}>Reset</button>
+    
+    <h4>{message}</h4>
 </div>
 
 <style>

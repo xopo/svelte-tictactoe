@@ -1,18 +1,26 @@
 <script>
 	import { onDestroy } from 'svelte';
-	import TicTac from './TicTac.svelte';
+	import { nextMove, reset } from './requests';
 	import gameStore from './tictactoeStore';
+
+	import TicTac from './TicTac.svelte';
 
 	let board = new Array(9).fill('');
 	let myPlayer;
+	let nextPlayer;
 	let winner;
 	let numberOfPeople;
 
 	const subscribtion = gameStore.subscribe( data => {
 		if (!data) return;
 		
-		({board, nextPlayer: myPlayer, winner, numberOfPeeps: numberOfPeople} = data);
+		({board, nextPlayer, winner, numberOfPeeps: numberOfPeople} = data);
+		if (!myPlayer) {
+			myPlayer = nextPlayer;
+		}
 	})
+	$: myTurn = myPlayer === nextPlayer;
+
 	$: console.log({board, myPlayer, winner, numberOfPeople})
 	onDestroy(subscribtion);
 </script>
@@ -24,9 +32,9 @@
 		<h2>Tie Game !!!</h2> 
 	{:else if winner}
 		<h2>Player {winner} won!!!</h2>
-		<button>New Button</button>
+		<button on:click={()=>reset()}>New Game</button>
 	{:else}
-		<TicTac {board} {myPlayer}/>
+		<TicTac {board} {reset} {nextMove } {myTurn}/>
 	{/if}
 </main>
 
