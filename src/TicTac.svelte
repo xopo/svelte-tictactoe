@@ -1,22 +1,19 @@
 <script>
     let lastValue;
-    let elements;
+    export let board;
+    export let myPlayer;
+
     const asignValue = (index) => {
         const newValue = !lastValue || lastValue === 'o' ? 'x' : 'o';
         ([elements[index], lastValue] = [newValue, newValue]);
     }
-    function reset() {
-        debugger;
-        elements = new Array(9).fill('');
-    }
-    reset();
+    $: console.log({board, myPlayer});
 </script>
-<h3>Tic Tac magic</h3>
 <div class="content">
-    {#each elements as element, i}
+    {#each board as element, i}
         <div class="cell-{i + 1}" on:click={() => asignValue(i)}>{element}</div>
     {/each}
-    <button type='button' on:click={reset}>Reset</button>
+    <button type='button' on:click={() => console.log('reset the game')}>Reset</button>
 </div>
 
 <style>
